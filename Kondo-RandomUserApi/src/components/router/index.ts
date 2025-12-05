@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import RandomUserApi from '../views/random-user-api.vue'
 
+import Home from '../views/home.vue'
+import Cocktails from '../views/cock-tails.vue'
 
 
 const routes = [
-    { path: '/', name: 'RandomUserApi', component: RandomUserApi },
-    
+    { path: '/', name: 'Home', component: Home },
+    { path: '/cocktails',name:'Cocktails', component: Cocktails }
+
 ]
 
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+    history: createWebHistory(), routes
 })
 
 
