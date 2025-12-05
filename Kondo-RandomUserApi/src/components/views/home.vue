@@ -1,61 +1,3 @@
-<template>
-  <div>
-    <!-- Navbar -->
-    <Navbar />
-
-    <div class="max-w-5xl mx-auto px-4 py-12 mt-20">
-      <!-- Hero Section -->
-      <div
-        class="
-          bg-white/10
-          backdrop-blur-md
-          border border-white/20
-          rounded-2xl
-          p-8
-          shadow-lg
-          text-center
-        "
-      >
-        <h1
-          class="
-            font-playfair
-            text-4xl
-            text-yellow-700
-            mb-4
-          "
-        >
-          API Exercise
-        </h1>
-
-        <p class="text-gray-200 mb-6">
-          This app demonstrates API fetching, pagination, composables, and Vue stores using the Booze API.
-        </p>
-
-        <button
-          @click="goCocktails"
-          class="
-            inline-block
-            px-6
-            py-3
-            rounded-xl
-            border
-            border-yellow-700
-            text-yellow-700
-            font-semibold
-            hover:bg-yellow-700/20
-            transition
-          "
-        >
-          View Cocktails →
-        </button>
-      </div>
-
-      <!-- Category List -->
-      <category-list class="mt-12" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 
 import Navbar from "../composable/navbar.vue";
@@ -65,6 +7,87 @@ const router = useRouter();
 
 // Navigate programmatically using router.push
 const goCocktails = () => {
-  router.push({ name: "Cocktails" });
+    router.push({ name: "Category" });
 };
 </script>
+
+<template>
+    <div class="min-h-screen bg-charcoal text-ivory">
+        <!-- Navbar -->
+        <Navbar />
+
+        <div class="max-w-5xl mx-auto px-4 py-12 mt-24">
+
+            <!-- Hero Section -->
+            <div class="
+          bg-oak/40
+          backdrop-blur-xl
+          border border-amber/30
+          rounded-2xl
+          p-10
+          shadow-[0_8px_25px_rgba(0,0,0,0.4)]
+          text-center
+        ">
+                <h1 class="
+            font-playfair
+            text-4xl
+            text-gold
+            mb-4
+            drop-shadow-lg
+          ">
+                    API Exercise
+                </h1>
+
+                <p class="text-linen/80 mb-8 leading-relaxed">
+                    This app demonstrates API fetching, composables, and Vue routing with a premium cocktail-themed
+                    interface.
+                </p>
+
+                <button @click="goCocktails" class="
+            px-8
+            py-3
+            rounded-xl
+            border border-brass
+            text-brass
+            font-semibold
+            hover:bg-brass/20
+            hover:text-amber
+            transition-all
+            duration-300
+            shadow-md
+
+            transform
+            hover:-translate-y-1
+            hover:shadow-lg
+          ">
+                    View Cocktails →
+                </button>
+            </div>
+
+            <!-- Category List -->
+            <category-list class="mt-14" />
+        </div>
+    </div>
+</template>
+
+
+<style scoped>
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}    </style>

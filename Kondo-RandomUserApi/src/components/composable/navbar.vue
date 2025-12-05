@@ -5,18 +5,18 @@
       top-0
       w-full
       z-50
-      backdrop-blur-md
-      bg-white/10
+      backdrop-blur-xl
+      bg-oak/60
       border-b
-      border-white/20
-      shadow-md
+      border-amber/20
+      shadow-[0_4px_20px_rgba(0,0,0,0.4)]
     "
   >
     <div
       class="
         max-w-6xl
         mx-auto
-        px-4
+        px-6
         py-4
         flex
         justify-between
@@ -26,11 +26,14 @@
       <!-- Logo -->
       <div
         class="
-          font-playfair
-          text-xl
-          text-yellow-700
+          font-poppins 
+          font-semibold
+          text-2xl
+          text-gold
           tracking-wide
           cursor-pointer
+          hover:text-amber
+          transition
         "
         @click="goHome"
       >
@@ -38,15 +41,18 @@
       </div>
 
       <!-- Links -->
-      <div class="flex gap-6">
+      <div class="flex gap-8">
+        <!-- Home -->
         <div
           class="
             relative
-            text-gray-200
-            hover:text-yellow-700
-            transition
+            text-linen
+            hover:text-amber
+            transition-all
+            duration-300
             font-medium
             cursor-pointer
+            pb-1
           "
           @click="goHome"
         >
@@ -55,38 +61,43 @@
             v-if="currentRoute === '/'"
             class="
               absolute
-              -bottom-1
+              -bottom-0.5
               left-0
               w-full
               h-0.5
-              bg-yellow-700
+              bg-gold
               rounded
+              transition-all
             "
           ></span>
         </div>
 
+        <!-- Cocktails -->
         <div
           class="
             relative
-            text-gray-200
-            hover:text-yellow-700
-            transition
+            text-linen
+            hover:text-amber
+            transition-all
+            duration-300
             font-medium
             cursor-pointer
+            pb-1
           "
           @click="cocktail"
         >
-          Cocktails
+          Categories
           <span
             v-if="currentRoute === '/cocktails'"
             class="
               absolute
-              -bottom-1
+              -bottom-0.5
               left-0
               w-full
               h-0.5
-              bg-yellow-700
+              bg-gold
               rounded
+              transition-all
             "
           ></span>
         </div>
@@ -109,7 +120,7 @@ const goHome = () => {
 
 // Function for Cocktails
 const cocktail = () => {
-  router.push({ name: 'Cocktails' })
+  router.push({ name: 'Category' })
 }
 
 // Reactive route for active underline
@@ -117,9 +128,23 @@ const currentRoute = computed(() => route.path)
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-.font-playfair {
-  font-family: 'Playfair Display', serif;
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
 }
 </style>

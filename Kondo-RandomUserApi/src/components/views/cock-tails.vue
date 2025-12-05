@@ -1,23 +1,20 @@
 <template>
-  <Navbar />
-  <div class="max-w-5xl mx-auto px-4 py-12">
-    <h1
-      class="
-        font-playfair
-        text-4xl
-        text-yellow-700
-        mb-8
-        text-center
-      "
-    >
-      Cocktails
-    </h1>
 
-    <cocktails-list />
-  </div>
+  <!-- Page Wrapper -->
+  <section
+    
+  >
+    <!-- Title -->
+   
+    
+    <!-- Cocktails List -->
+    <category-list />
+  </section>
 </template>
+
 
 <script setup>
 import CocktailsList from "../composable/cocktails-list.vue";
-import Navbar from "../composable/navbar.vue";
+import categoryList from "../composable/category-list.vue";
+
 </script>
