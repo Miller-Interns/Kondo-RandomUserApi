@@ -1,5 +1,10 @@
 <template>
     <Navbar />
+    <Pagination
+  v-model="page"
+  :total-pages="pagination.pages"
+  class="flex justify-center pt-36"
+/>
    <div class="grid 
     grid-cols-1 
     sm:grid-cols-2 
@@ -9,7 +14,10 @@
     w-full
     mx-auto
     font-poppins 
+    pt-12
 ">
+
+
     <!-- Skeleton -->
     <template v-if="loading">
         <div
@@ -43,6 +51,7 @@
     transition-all
     duration-300
     h-64
+    
   "
 >
   <!-- Full-cover Image -->
@@ -85,13 +94,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,watch } from "vue";
 import { useCocktails } from '../api/use-cocktails'
 import Navbar from "../composable/navbar.vue";
+import Pagination from "./pagination.vue";
+const {  } = useCocktails();
 
 
-const { cocktails, fetchCocktails } = useCocktails();
+const { cocktails,pagination, fetchCocktails } = useCocktails();
 const loading = ref(true);
+const page = ref(1);
 
 fetchCocktails(1).finally(() => (loading.value = false));
+watch(page, (newPage) => {
+  loading.value = true;
+  fetchCocktails(newPage).finally(() => (loading.value = false));
+});
+
 </script>

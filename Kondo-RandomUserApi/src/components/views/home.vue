@@ -7,7 +7,7 @@ const router = useRouter();
 
 // Navigate programmatically using router.push
 const goCocktails = () => {
-    router.push({ name: "Category" });
+    router.push({ name: "Cocktails" });
 };
 </script>
 
@@ -16,11 +16,11 @@ const goCocktails = () => {
     class="min-h-screen w-full text-ivory bg-cover bg-center bg-no-repeat"
     :style="{ backgroundImage: `url(${bgImg})` }"
   >
-    <!-- Navbar should be at the top -->
+    
     <Navbar class="relative z-10" />
 
     <div class="max-w-5xl mx-auto px-4 py-12 mt-24 relative z-10">
-      <!-- Hero Section -->
+     
       <div
         class="bg-oak/40 backdrop-blur-xl border border-amber/30 rounded-2xl p-10 shadow-[0_8px_25px_rgba(0,0,0,0.4)] text-center"
       >
