@@ -1,32 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-
-  content: [
-
-    "./index.html",
-
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-
-  ],
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
 
   theme: {
     extend: {
-      
       colors: {
         // 🎩 Primary Brand Colors
-        bourbon: "#8C5E3C",       // rich whiskey brown
-        oak: "#3F2C23",           // deep wood brown
-        barrel: "#6E4A35",        // aged barrel brown
+        bourbon: "#8C5E3C", // rich whiskey brown
+        oak: "#3F2C23", // deep wood brown
+        barrel: "#6E4A35", // aged barrel brown
 
         // ✨ Accent Colors
-        gold: "#D4AF37",          // classy gold highlight
-        brass: "#B08B4F",         // softer gold-metal accent
+        gold: "#D4AF37", // classy gold highlight
+        brass: "#B08B4F", // softer gold-metal accent
         mutedbrass: "#cab593",
-        amber: "#E6B17E",         // cocktail amber tone
-        copper: "#B87333",        // warm copper accent
-        rye: "#C19A6B",           // light rye whiskey
-        brown: "#D2B48C",   // light brown accent
-        card:"#89311b",
+        amber: "#E6B17E", // cocktail amber tone
+        copper: "#B87333", // warm copper accent
+        rye: "#C19A6B", // light rye whiskey
+        brown: "#D2B48C", // light brown accent
+        card: "#89311b",
         // 🪵 Wood & Earth Neutrals
         bark: "#2A1F1A",
         espresso: "#1B1412",
@@ -44,13 +36,10 @@ module.exports = {
       },
 
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
-      }
-    }
+        montserrat: ["Montserrat", "sans-serif"],
+      },
+    },
   },
 
-
   plugins: [],
-
-}
-
+};

@@ -13,7 +13,8 @@ export function useCocktails() {
     url.searchParams.append("page", page.toString());
     url.searchParams.append("limit", "10");
 
-    if (categoryId) url.searchParams.append("category_id", categoryId.toString());
+    if (categoryId)
+      url.searchParams.append("category_id", categoryId.toString());
 
     try {
       const res = await fetch(url.toString());
