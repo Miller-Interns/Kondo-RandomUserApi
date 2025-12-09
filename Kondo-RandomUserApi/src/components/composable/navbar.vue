@@ -54,7 +54,7 @@ const currentRoute = computed(() => route.path)
         <div class="relative text-linen hover:text-amber transition-all duration-300 font-medium cursor-pointer pb-1"
           @click="cocktail">
           Categories
-          <span v-if="currentRoute === '/category' || currentRoute === '/categories'"
+          <span v-if="currentRoute === '/Cocktails' || currentRoute === '/cocktails'"
             class="absolute -bottom-0.5 left-0 w-full h-0.5 bg-gold rounded transition-all"></span>
         </div>
       </div>
