@@ -34,7 +34,7 @@ function prevPage() {
   <div class="flex gap-3 items-center justify-center mt-6 font-montserrat">
     <!-- Prev -->
     <button @click="prevPage" :disabled="page <= 1"
-      class="px-4 py-2 rounded-xl border border-linen text-linen transition disabled:opacity-40 disabled:cursor-not-allowed">
+      class="px-4 py-2  bg-amber text-black font-semibold rounded-xl border border-linen  transition disabled:opacity-40 disabled:cursor-not-allowed">
       Prev
     </button>
 
@@ -45,7 +45,7 @@ function prevPage() {
 
     <!-- Next -->
     <button @click="nextPage" :disabled="page >= props.totalPages"
-      class="px-4 py-2 rounded-xl border border-linen text-linen transition disabled:opacity-40 disabled:cursor-not-allowed">
+      class="px-4 py-2 rounded-xl border  bg-amber text-black font-semibold border-linen  transition disabled:opacity-40 disabled:cursor-not-allowed">
       Next
     </button>
   </div>

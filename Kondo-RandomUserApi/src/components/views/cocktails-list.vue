@@ -4,6 +4,9 @@ import { useCocktails } from '../api/use-cocktails'
 import Navbar from "../composable/navbar.vue";
 import Pagination from "../composable/pagination.vue";
 import landscapeImg from '../../assets/landscape.png'
+
+import Refresh from "../composable/refresh.vue";
+
 const { } = useCocktails();
 
 
@@ -17,8 +20,14 @@ watch(page, (newPage) => {
   fetchCocktails(newPage).finally(() => (loading.value = false));
 });
 
-</script>
+function refresh() {
+  loading.value = true;
+  fetchCocktails(page.value).finally(() => {
+    loading.value = false;
+  });
+}
 
+</script>
 
 <template>
   <div class="
@@ -29,74 +38,83 @@ watch(page, (newPage) => {
       pt-12
       relative
     " :style="{ backgroundImage: `url(${landscapeImg})` }">
-
     <!-- BLUR LAYER (behind everything) -->
     <div class="absolute inset-0 backdrop-blur-md z-0"></div>
 
     <!-- FOREGROUND CONTENT -->
     <div class="relative z-10">
-
       <Navbar />
 
-      <!-- PAGINATION ABOVE GRID, CENTERED -->
+      <!-- PAGINATION (centered) -->
       <div class="flex justify-center mt-20">
         <Pagination v-model="page" :total-pages="pagination.pages" />
       </div>
 
-      <!-- DRINKS GRID -->
-      <div class="
-          grid
-          grid-cols-1 sm:grid-cols-2 md:grid-cols-3
-          gap-6
-          max-w-[860px]
-          w-full
-          mx-auto
-          mt-10
-        ">
-        <!-- Skeleton loader -->
-        <template v-if="loading">
-          <div v-for="n in 6" :key="n" class="
-              bg-oak/30
-              backdrop-blur-md
-              border border-amber/30
-              rounded-2xl
-              p-4
-              animate-pulse
-              h-64
-              shadow-[0_4px_20px_rgba(0,0,0,0.4)]
-            "></div>
-        </template>
+      <!-- REFRESH + GRID WRAPPER -->
+      <div class="relative max-w-[860px] w-full mx-auto mt-4">
 
-        <!-- Drinks list -->
-        <template v-else>
-          <div v-for="c in cocktails" :key="c.id" class="
-              relative
-              rounded-2xl
-              overflow-hidden
-              shadow-lg
-              hover:shadow-[0_10px_25px_rgba(0,0,0,0.55)]
-              hover:-translate-y-1
-              transition-all
-              duration-300
-              h-64
-            ">
-            <img :src="c.image" class="absolute inset-0 w-full h-full object-cover" />
+        <!-- FLOATING REFRESH BUTTON (right side, aligned with cards) -->
+        <div class="absolute -top-10 right-0">
+          <Refresh @refresh="refresh" />
+        </div>
 
-            <div class="
-                absolute bottom-0 left-0 w-full h-40
-                bg-gradient-to-t
-                from-black/80 via-transparent to-transparent
-                flex flex-col justify-end p-4
+        <!-- DRINKS GRID -->
+        <div class="
+            grid
+            grid-cols-1 sm:grid-cols-2 md:grid-cols-3
+            gap-6
+            mt-6
+            pt-10
+          ">
+          <!-- Skeleton Loader if the page is still loading  -->
+          <template v-if="loading">
+            <div v-for="n in 6" :key="n" class="
+                 bg-amber 
+                backdrop-blur-md
+                border border-amber/30
+                rounded-2xl
+                p-4
+                animate-pulse
+                h-64
+                shadow-[0_4px_20px_rgba(0,0,0,0.4)]
+              "></div>
+          </template>
+
+          <!-- Drinks list -->
+          <template v-else>
+            <div v-for="c in cocktails" :key="c.id" class="
+                relative
+                rounded-2xl
+                overflow-hidden
+                shadow-lg
+                hover:shadow-[0_10px_25px_rgba(0,0,0,0.55)]
+                hover:-translate-y-1
+                transition-all
+                duration-300
+                h-64
               ">
-              <h3 class="text-lg font-semibold text-amber mb-1 tracking-wide">
-                {{ c.name }}
-              </h3>
-              <p class="text-linen text-sm uppercase tracking-wide">
-                Glass: {{ c.glass_type.label }}
-              </p>
+              <img :src="c.image" class="absolute inset-0 w-full h-full object-cover" />
+
+              <div class="
+                  absolute bottom-0 left-0 w-full h-80
+                  bg-gradient-to-t
+                  from-black/90 via-transparent to-transparent
+                  flex flex-col justify-end p-4 
+                ">
+                <h3 class="text-lg font-bold text-amber mb-1 tracking-wide">
+                  {{ c.name }}
+                </h3>
+                <p class="text-linen font-semibold text-sm uppercase tracking-wide">
+                  Glass: {{ c.glass_type.label }}
+                </p>
+              </div>
+
             </div>
-          </div>
-        </template>
+          </template>
+        </div>
+      </div>
+      <div class="flex justify-center mt-20 pb-10">
+        <Pagination v-model="page" :total-pages="pagination.pages" />
       </div>
     </div>
   </div>
