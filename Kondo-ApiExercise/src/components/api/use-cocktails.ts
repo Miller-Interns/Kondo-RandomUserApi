@@ -7,7 +7,6 @@ export function useCocktails() {
   const pagination = ref({ count: 0, pages: 0 });
   const loading = ref(false);
 
-  // existing paged fetch (keeps compatibility)
   const fetchCocktails = async (page = 1, categoryId?: number) => {
     loading.value = true;
 
@@ -19,21 +18,25 @@ export function useCocktails() {
 
     try {
       const res = await fetch(url.toString());
+      if (!res.ok)
+        throw new Error(`API error: ${res.status} ${res.statusText}`);
       const data = await res.json();
 
       cocktails.value = data.data;
       pagination.value = data.pagination;
+    } catch (err) {
+      console.error("Error fetching cocktails:", err);
     } finally {
       loading.value = false;
     }
   };
 
-  // NEW: fetch all cocktails across pages, set cocktails.value to the full list
+  // SAFE version: fetch all cocktails sequentially to avoid 429
   const fetchAllCocktails = async (categoryId?: number) => {
     loading.value = true;
 
     try {
-      // 1) fetch page 1 to learn pagination info
+      // 1) Fetch first page
       const url1 = new URL("https://boozeapi.com/api/v1/cocktails");
       url1.searchParams.append("page", "1");
       url1.searchParams.append("limit", "10");
@@ -41,35 +44,41 @@ export function useCocktails() {
         url1.searchParams.append("category_id", categoryId.toString());
 
       const res1 = await fetch(url1.toString());
+      if (!res1.ok)
+        throw new Error(`API error: ${res1.status} ${res1.statusText}`);
       const data1 = await res1.json();
 
       const allData: Cocktail[] = [...data1.data];
-
       const totalPages = data1.pagination?.pages ?? 1;
 
-      // 2) fetch remaining pages in parallel (if any)
-      if (totalPages > 1) {
-        const promises = [];
-        for (let p = 2; p <= totalPages; p++) {
-          const url = new URL("https://boozeapi.com/api/v1/cocktails");
-          url.searchParams.append("page", p.toString());
-          url.searchParams.append("limit", "10");
-          if (categoryId)
-            url.searchParams.append("category_id", categoryId.toString());
-          promises.push(fetch(url.toString()).then((r) => r.json()));
+      // 2) Fetch remaining pages sequentially
+      for (let p = 2; p <= totalPages; p++) {
+        const url = new URL("https://boozeapi.com/api/v1/cocktails");
+        url.searchParams.append("page", p.toString());
+        url.searchParams.append("limit", "10");
+        if (categoryId)
+          url.searchParams.append("category_id", categoryId.toString());
+
+        const res = await fetch(url.toString());
+        if (!res.ok) {
+          console.warn(`Stopped at page ${p}: ${res.status} ${res.statusText}`);
+          break; // stop if API blocks
         }
-        const results = await Promise.all(promises);
-        results.forEach((r) => {
-          if (r && Array.isArray(r.data)) allData.push(...r.data);
-        });
+
+        const r = await res.json();
+        if (r && Array.isArray(r.data)) allData.push(...r.data);
+
+        // small delay to avoid hammering the API
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
 
       cocktails.value = allData;
-      // update pagination to reflect the full count/pages (optional)
       pagination.value = {
         count: allData.length,
         pages: Math.ceil(allData.length / 10),
       };
+    } catch (err) {
+      console.error("Error fetching all cocktails:", err);
     } finally {
       loading.value = false;
     }

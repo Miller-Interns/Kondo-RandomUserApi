@@ -6,7 +6,7 @@ import Pagination from "../composable/pagination.vue";
 import landscapeImg from '../../assets/landscape.png'
 import Refresh from "../composable/refresh.vue";
 
-const { cocktails, pagination, fetchCocktails, fetchAllCocktails, loading } = useCocktails();
+const { cocktails, fetchAllCocktails, loading } = useCocktails();
 
 const page = ref(1);
 const pageSize = 9; // items per page shown in your grid (adjust to desired number)
