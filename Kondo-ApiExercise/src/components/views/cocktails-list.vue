@@ -1,32 +1,51 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useCocktails } from '../api/use-cocktails'
 import Navbar from "../composable/navbar.vue";
 import Pagination from "../composable/pagination.vue";
 import landscapeImg from '../../assets/landscape.png'
-
 import Refresh from "../composable/refresh.vue";
 
-const { } = useCocktails();
+const { cocktails, pagination, fetchCocktails, fetchAllCocktails, loading } = useCocktails();
 
-
-const { cocktails, pagination, fetchCocktails } = useCocktails();
-const loading = ref(true);
 const page = ref(1);
+const pageSize = 9; // items per page shown in your grid (adjust to desired number)
 
-fetchCocktails(1).finally(() => (loading.value = false));
-watch(page, (newPage) => {
-  loading.value = true;
-  fetchCocktails(newPage).finally(() => (loading.value = false));
+onMounted(async () => {
+  // fetch the entire dataset once, then do frontend pagination
+  await fetchAllCocktails();
 });
 
+// If you still want the single-page fetch behavior (e.g., refresh button uses it),
+// you can keep using fetchCocktails(page) — but the main list below uses the full set.
+
 function refresh() {
-  loading.value = true;
-  fetchCocktails(page.value).finally(() => {
-    loading.value = false;
+  // refresh the full dataset
+  fetchAllCocktails().then(() => {
+    // stay on current page (or reset to 1 if you prefer)
   });
 }
 
+// ⭐ Global sort A → Z
+const sortedCocktails = computed(() => {
+  return [...cocktails.value].sort((a, b) => a.name.localeCompare(b.name));
+});
+
+// ⭐ Paginated slice of the sorted data
+const paginatedCocktails = computed(() => {
+  const start = (page.value - 1) * pageSize;
+  return sortedCocktails.value.slice(start, start + pageSize);
+});
+
+// compute total pages for the pagination component
+const totalPages = computed(() => {
+  return Math.max(1, Math.ceil(sortedCocktails.value.length / pageSize));
+});
+
+// keep page within bounds if data shrinks
+watch(sortedCocktails, () => {
+  if (page.value > totalPages.value) page.value = totalPages.value;
+});
 </script>
 
 <template>
@@ -38,27 +57,26 @@ function refresh() {
       pt-12
       relative
     " :style="{ backgroundImage: `url(${landscapeImg})` }">
-    <!-- BLUR LAYER (behind everything) -->
-    <div class="absolute inset-0 backdrop-blur-md z-0"></div>
+
+    <!-- BLUR LAYER -->
+    <div class="fixed inset-0 backdrop-blur-md z-0 pointer-events-none"></div>
 
     <!-- FOREGROUND CONTENT -->
     <div class="relative z-10">
       <Navbar />
 
-      <!-- PAGINATION (centered) -->
+      <!-- Pagination (Top) -->
       <div class="flex justify-center mt-20">
-        <Pagination v-model="page" :total-pages="pagination.pages" />
+        <Pagination v-model="page" :total-pages="totalPages" />
       </div>
 
-      <!-- REFRESH + GRID WRAPPER -->
       <div class="relative max-w-[860px] w-full mx-auto mt-4">
-
-        <!-- FLOATING REFRESH BUTTON (right side, aligned with cards) -->
+        <!-- Refresh Button -->
         <div class="absolute -top-10 right-0">
           <Refresh @refresh="refresh" />
         </div>
 
-        <!-- DRINKS GRID -->
+        <!-- GRID -->
         <div class="
             grid
             grid-cols-1 sm:grid-cols-2 md:grid-cols-3
@@ -66,10 +84,11 @@ function refresh() {
             mt-6
             pt-10
           ">
-          <!-- Skeleton Loader if the page is still loading  -->
+
+          <!-- Skeleton while loading -->
           <template v-if="loading">
             <div v-for="n in 6" :key="n" class="
-                 bg-amber 
+                bg-amber 
                 backdrop-blur-md
                 border border-amber/30
                 rounded-2xl
@@ -80,9 +99,9 @@ function refresh() {
               "></div>
           </template>
 
-          <!-- Drinks list -->
+          <!-- Drinks (Sorted A → Z, paginated) -->
           <template v-else>
-            <div v-for="c in cocktails" :key="c.id" class="
+            <div v-for="c in paginatedCocktails" :key="c.id" class="
                 relative
                 rounded-2xl
                 overflow-hidden
@@ -108,13 +127,14 @@ function refresh() {
                   Glass: {{ c.glass_type.label }}
                 </p>
               </div>
-
             </div>
           </template>
         </div>
       </div>
+
+      <!-- Bottom Pagination -->
       <div class="flex justify-center mt-20 pb-10">
-        <Pagination v-model="page" :total-pages="pagination.pages" />
+        <Pagination v-model="page" :total-pages="totalPages" />
       </div>
     </div>
   </div>
